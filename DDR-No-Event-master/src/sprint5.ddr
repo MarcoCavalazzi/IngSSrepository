@@ -1,0 +1,146 @@
+RobotSystem rob -regeneratesrc
+
+Event sensordata : sensordata(X)
+Event local_inputcmd: usercmd(X)
+Dispatch consolecmd: consolecmd(X)
+Event usercmd: usercmd(X)
+Event obstacle : obstacle(X)
+
+Context ctxRobot ip[host="localhost" port=10000]
+Context ctxConsole ip[host="localhost" port=10001]
+
+QActor console context ctxConsole -g green{
+	Plan init normal
+		sense time(300000) local_inputcmd -> continue;
+		onEvent local_inputcmd:usercmd(executeInput(X)) -> forward robotmessage -m consolecmd:consolecmd(X);
+		repeatPlan 0
+}
+
+QActor robotmessage context ctxRobot{
+	Plan init normal
+		receiveTheMsg m( MSGID,dispatch,SENDER, robotmessage, MSGCONTENET, MSGNUM ) time(300000);
+		onMsg consolecmd:consolecmd(X) -> emit usercmd:usercmd(X); 
+		repeatPlan 0
+}
+
+Robot mock QActor robotq context ctxRobot{
+	Rules{   
+		loadTheory(File) :- 
+			actorPrintln( loadTheory(File) ),
+			consult( File ).
+		amp("autonomous.pl"). //autonomous mode path
+ 	}
+ 	
+	Plan init normal 
+		println("Ready!");
+		solve loadTheory("applTheory.pl") time(0) onFailSwitchTo prologFailure;
+		switchToPlan selectMode
+		
+	Plan selectMode
+		println("Plan selectMode");
+        sense time(300000) usercmd -> continue ;
+        printCurrentEvent;
+        memoCurrentEvent;
+       	[ ?? msg(usercmd, EVENT, WSOCK, NONE, usercmd(robotgui(l(startLearning))), TIME) ] switchToPlan startLearning ;
+        [ ?? msg(usercmd, EVENT, WSOCK, NONE, usercmd(robotgui(n(startAutonomousDirect))), TIME) ] switchToPlan autonomousDirect ;
+        [ ?? msg(usercmd, EVENT, WSOCK, NONE, usercmd(robotgui(n(startAutonomousReverse))), TIME) ] switchToPlan autonomousReverse ;
+        removeRule msg(usercmd, EVENT, WSOCK, NONE, usercmd,TIME);
+        repeatPlan 0
+	
+	Plan startLearning
+		println("Plan startLearning");
+		solve cleanMemory time(0) onFailSwitchTo prologFailure;
+		sense time(300000) usercmd -> continue ;
+		switchToPlan checkStopLearning;
+		switchToPlan learningLoop
+    
+    Plan checkStopLearning resumeLastPlan
+    	println("Plan checkStopLearning");
+    	memoCurrentEvent;
+        [ ?? msg(usercmd, EVENT, WSOCK, NONE, usercmd(robotgui(k(stopLearning))), TIME) ] switchToPlan selectMode
+    
+	Plan learningLoop
+	   	println("Plan learningLoop");
+        solve addMove time(0) onFailSwitchTo prologFailure;
+        solve robotMoveFromUsercmdEvent(300000, usercmd, moveCallback) time(0) onFailSwitchTo prologFailure;
+        repeatPlan 0
+        
+    Plan moveCallback
+    	println("Plan moveCallback");
+    	memoCurrentEvent;
+    	[ !? msg(usercmd, EVENT, WSOCK, NONE, usercmd(robotgui(k(stopLearning))), TIME) ] switchToPlan saveLastMove;
+    	switchToPlan learningLoop
+    
+    Plan saveLastMove
+    	solve addMove time(0) onFailSwitchTo prologFailure;
+        switchToPlan selectMode
+	
+	Plan autonomousStart
+		println("autonomous");
+		solve prepareForAutonomousLoop time(0) onFailSwitchTo prologFailure;
+		switchToPlan loadMovesInProlog;
+		switchToPlan loadMovesInJava
+	
+	Plan autonomousDirect
+		switchToPlan autonomousStart
+	
+	Plan loadMovesInProlog resumeLastPlan
+		println("loadMovesInProlog");
+		solve loadMovesInProlog time(0)
+	
+	Plan loadMovesInJava
+		println("loadMovesInJava");
+		solve loadTempMoveInJava time(0) onFailSwitchTo movesLoadedInJava;
+		repeatPlan 0
+	
+	Plan autonomousReverse
+		println("autonomousReverse");
+		addRule reverse(true);
+		switchToPlan autonomousStart
+	
+	Plan movesLoadedInJava
+		println("movesLoadedInJava");
+		switchToPlan autonomousPrepare
+	
+	Plan autonomousPrepare
+		println("autonomousPrepare");
+		solve calculateTimes time(0) onFailSwitchTo prologFailure;
+		[ ?? reverse(true) ] solve setReverseMode time(0) onFailSwitchTo prologFailure;
+		switchToPlan loadFinalMovesInJava
+	
+	Plan loadFinalMovesInJava
+		println("loadFinalMovesInJava");
+		solve isMovesEnded time(0) onFailSwitchTo prologFailure;		
+		[?? end] switchToPlan autonomousLoop;
+		[?? notend]
+		solve loadMoveInJava time(0) onFailSwitchTo prologFailure;
+		repeatPlan 0
+	
+	Plan autonomousLoop
+		println("autonomousLoop");
+		solve execMove("obstacle,usercmd", "evhSensor,evhCmd") time(0) onFailSwitchTo endAutonomousPhase ;
+		repeatPlan 0
+	
+	Plan evhCmd resumeLastPlan
+    	println("evhCmd");
+    	printCurrentEvent;
+    	switchToPlan doMoveCallback
+
+    Plan evhSensor resumeLastPlan
+    	println("evhSensor");
+    	printCurrentEvent;
+    	switchToPlan doMoveCallback
+	
+	Plan endAutonomousPhase
+		println("endAutonomousPhase");
+		switchToPlan selectMode
+		
+	Plan doMoveCallback
+		println("doMoveCallback");
+		solve removeLeftAutonomousCommand time(0) onFailSwitchTo endAutonomousPhase;
+		repeatPlan 0
+	
+	Plan prologFailure
+		println(">>>>> [x] Plan prologFailure") ;
+        println(">>>>> [x] failed to solve a Prolog goal" )
+}

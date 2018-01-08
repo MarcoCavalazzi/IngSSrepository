@@ -1,0 +1,82 @@
+RobotSystem rob -regeneratesrc
+
+Event local_inputcmd: usercmd(X)
+Dispatch consolecmd: consolecmd(X)
+Event usercmd: usercmd(X)
+
+Context ctxRobot ip[host="localhost" port=10000]
+Context ctxConsole ip[host="localhost" port=10001]
+
+QActor console context ctxConsole -g green{
+	Plan init normal
+		sense time(300000) local_inputcmd -> continue;
+		onEvent local_inputcmd:usercmd(executeInput(X)) -> forward robotmessage -m consolecmd:consolecmd(X);
+		repeatPlan 0
+}
+
+QActor robotmessage context ctxRobot{
+	Plan init normal
+		receiveTheMsg m( MSGID,dispatch,SENDER, robotmessage, MSGCONTENET, MSGNUM ) time(300000);
+		onMsg consolecmd:consolecmd(X) -> emit usercmd:usercmd(X); 
+		repeatPlan 0
+}
+
+Robot mock QActor robotq context ctxRobot{
+ 	
+	Plan init normal 
+		switchToPlan selectMode
+		
+	Plan selectMode
+		println("selectMode");
+        sense time(300000) usercmd -> continue ;
+        memoCurrentEvent;
+       	[ ?? msg(usercmd, EVENT, WSOCK, NONE, usercmd(robotgui(l(startLearning))), TIME) ] switchToPlan startLearning ;
+        [ ?? msg(usercmd, EVENT, WSOCK, NONE, usercmd(robotgui(n(startAutonomousDirect))), TIME) ] switchToPlan autonomousDirect ;
+        [ ?? msg(usercmd, EVENT, WSOCK, NONE, usercmd(robotgui(n(startAutonomousReverse))), TIME) ] switchToPlan autonomousReverse
+	
+	Plan startLearning
+		println("startLearning");
+		sense time(300000) usercmd -> continue ;
+		switchToPlan learningLoop
+    
+	Plan learningLoop
+		println("learningLoop");
+		memoCurrentEvent;
+    	[ ?? msg(usercmd, EVENT, WSOCK, NONE, usercmd(robotgui(k(stopLearning))), TIME) ] switchToPlan selectMode;
+    	/*
+		 * Save current move and execute it
+		 * 
+		 */
+		sense time(300000) usercmd -> continue ;
+        repeatPlan 0
+	
+	Plan autonomousStart
+		println("autonomousStart");
+		/*
+		 * Set moves lenght
+		 * Save moves in KB, if moves are ended switch to autonomousLoop
+		 * 
+		 */
+		switchToPlan autonomousLoop
+	
+	Plan autonomousDirect
+		println("autonomousDirect");
+		switchToPlan autonomousStart
+	
+	Plan autonomousReverse
+		println("autonomousReverse");
+		switchToPlan autonomousStart
+	
+	Plan autonomousLoop
+		println("autonomousLoop");
+		/*
+		 * execute every move
+		 * if moves are ended switch to endAutonomousPhase
+		 */
+		switchToPlan endAutonomousPhase
+	
+	Plan endAutonomousPhase
+		println("endAutonomousPhase");
+		switchToPlan selectMode
+
+}
