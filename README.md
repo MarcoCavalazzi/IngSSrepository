@@ -1,2 +1,2 @@
-# DDR-Messages
-Robot controlled through messages
+# DDR-Direct Drive Robot
+Robot controlled through Wi-Fi
