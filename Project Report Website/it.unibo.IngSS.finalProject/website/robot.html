@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Final Project</title>
+	<meta charset="utf-8" />
+	<meta name="description" content="Final task for the course in Software Systems Engineering." />
+	<meta name="keywords" content="MDSD, Natali Antonio, Ing.S.S." />
+	<meta name="author" content="Marco Carlo Cavalazzi, Matteo Corradin, Lorenzo Monti" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<link rel="shortcut icon" href="images/favicon-raspberry-96x96.png">
+	<link rel="stylesheet" href="css/style.css" type="text/css" media="screen"/>
+	<link rel="stylesheet" href="css/robotInterface.css" type="text/css" media="screen"/>
+	
+	<script src="js/min/jquery-1.11.3.min.js"></script>
+	<script>
+		function Remove_Preloader(){
+			document.body.classList.remove('active_preloader'); 
+		};
+		
+		window.addEventListener( 'load', Remove_Preloader, false );
+	</script>
+	<script src="js/min/three.min.js"></script>
+	<script src="js/modelViewer.js"></script>
+</head>
+<body class="active_preloader">
+	<div class="background_preloader"><div class="wrapper_preloader"><div class="preloader left_round"></div><div class="preloader right_round"></div></div></div>
+	<div class="wrapper_header" id="home">
+		<header class="container header">
+			<a href="index.html" class="logo"><h1>Software Systems Engineering <span class="logo_item">Group Project</span></h1></a>
+			<nav id="wrapper_menu" class="wrapper_menu">	
+				<span id="icon_menu" class="position_right" data-effect="slide_top" data-menu="drop_down_block">&nbsp;</span>
+				<ul class="menu" id="scroll_menu">
+					<li class="menu_item">
+						<a href="index.html" class="menu_link scroller_link">Home<span class="line_bottom">&nbsp;</span></a>
+					</li>
+					<li class="menu_item">
+						<a href="robot.html" class="menu_link scroller_link">Project<span class="line_bottom">&nbsp;</span></a>
+					</li>
+					<li class="menu_item">
+						<a href="differential-drive-robot.pdf" class="menu_link scroller_link">Report<span class="line_bottom">&nbsp;</span></a>
+					</li>
+				</ul>
+			</nav>	
+		</header>
+	</div>
+	
+	<section id="intro" class="main_container columns3">
+		<h3 class="title">Final Task ISS 2015</h3>
+		<p class="paragraph">
+			<br/>
+			<div>
+				<h3>User Interface</h3>
+				<br/>
+				<p>From this interface it is possible to send a sequence of move commands (forward, backward, left, right, stop) to the robot and see a virtual representation of the result on the right side of the page. While running, the robot will record the whole sequence of commands until the user decides to terminate the <strong>learning phase</strong>.</p>
+				<p>After the termination of the learning phase, the user can tell the robot to enter the <strong>autonomous phase</strong> through the homonymous button in the GUI and choose a 'direct' or a 'reverse' mode. During this phase the robot autonomously executes the sequence of moves it has learned, by complementing each move (e.g. <i>forward->backward</i>) if the selected mode is reverse.</p>
+				<br/>
+				<p>During the autonomous phase, the robot is able to execute (as soon as the code allows it to) a <strong>stop</strong> command sent by the user (through the homonymous button in the GUI). If an obstacle is detected the robot executes an alternative behavior (in term of moves) in order to go around the object and follow the track again.</p>
+			</div>
+		</p>
+		</br>
+		
+		<div class="buttonsArea">
+			<p><a id="forwardButton" href="javascript:void(0)">forward</a></p>
+			<p>
+				<a id="leftButton" href="javascript:void(0)">left</a>
+				<a id="stopButton" href="javascript:void(0)">stop</a>
+				<a id="rightButton" href="javascript:void(0)">right</a>
+			</p>
+			<p><a id="backwardButton" href="javascript:void(0)">backward</a></p>
+		</div>
+		
+		<div class="modelViewer"></div>
+		
+		<!-- Autonomous mode section -->
+		<input type="button" class="autonomousModeArea" value="Autonomous mode" onclick="">
+		<span class="autonomousModeArea" id="forward">Forward</span>
+		<div class="onoffswitch">
+			<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
+			<label class="onoffswitch-label" for="myonoffswitch">
+				<span class="onoffswitch-inner"></span>
+				<span class="onoffswitch-switch"></span>
+			</label>
+		</div>
+		<span class="autonomousModeArea" id="backward">Backward</span>
+		<br/>
+		<br/>
+		
+	</section>
+	<footer class="footer">
+		Created by <a href="mailto:marcocarlo.cavalazzi@studio.unibo.it" class="link">Marco Carlo Cavalazzi</a>, 
+		<a href="mailto:matteo.corradin@studio.unibo.it" class="link">Matteo Corradin</a>, 
+		<a href="mailto:lorenzo.monti@studio.unibo.it" class="link">Lorenzo Monti</a>
+	</footer>
+	
+</body>
+</html>

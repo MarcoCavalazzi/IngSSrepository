@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Final Project</title>
+	<meta charset="utf-8" />
+	<meta name="description" content="Final task for the course in Software Systems Engineering." />
+	<meta name="keywords" content="MDSD, Natali Antonio, Ing.S.S." />
+	<meta name="author" content="Marco Carlo Cavalazzi, Matteo Corradin, Lorenzo Monti" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<link rel="shortcut icon" href="images/favicon-raspberry-96x96.png">
+	<link rel="stylesheet" href="css/style.css" type="text/css" media="screen"/>
+	
+	<script src="js/min/jquery-1.11.3.min.js"></script>
+	<script>
+		function Remove_Preloader(){
+			document.body.classList.remove('active_preloader'); 
+		};
+		
+		window.addEventListener( 'load', Remove_Preloader, false );
+	</script>
+</head>
+<body class="active_preloader">
+	<div class="background_preloader"><div class="wrapper_preloader"><div class="preloader left_round"></div><div class="preloader right_round"></div></div></div>
+	<div class="wrapper_header" id="home">
+		<header class="container header">
+			<a href="index.html" class="logo"><h1>Software Systems Engineering <span class="logo_item">Group Project</span></h1></a>
+			<nav id="wrapper_menu" class="wrapper_menu">	
+				<span id="icon_menu" class="position_right" data-effect="slide_top" data-menu="drop_down_block">&nbsp;</span>
+				<ul class="menu" id="scroll_menu">
+					<li class="menu_item">
+						<a href="index.html" class="menu_link scroller_link">Home<span class="line_bottom">&nbsp;</span></a>
+					</li>
+					<li class="menu_item">
+						<a href="robot.html" class="menu_link scroller_link">Project<span class="line_bottom">&nbsp;</span></a>
+					</li>
+					<li class="menu_item">
+						<a href="differential-drive-robot.pdf" class="menu_link scroller_link">Report<span class="line_bottom">&nbsp;</span></a>
+					</li>
+				</ul>
+			</nav>	
+		</header>
+	</div>
+	<div id="slideshow">
+		<span class="arrow prev"  id="leftControl"></span>
+		<div id="slidesContainer" >
+			<div id="slideInner">
+				<!-- example:
+				<div id="slide1" class="slide active_slide">
+					<div class="layer scale icon_slide"></div>
+					<p class="layer slide_info slide_right">
+						delightful<span class="decor"> animations</span>
+					</p>
+					<p class="layer slide_info slide_bottom paragraph_two">
+						In your<span class="decor"> devices</span>
+					</p>
+				</div>
+				-->
+				<div id="slide1" class="slide active_slide">
+					<div class="layer scale icon_slide"></div>
+					<p class="layer slide_info slide_right">
+						Building a <span class="decor"> project </span>
+					</p>
+					<p class="layer slide_info slide_left paragraph_two">
+						using the <span class="decor"> MDSD approach </span>
+					</p>
+				</div>
+				<div id="slide2" class="slide">
+					<div class="layer slide_top icon_slide"></div>
+					<p class="layer slide_info flipY">
+						Controlling a robot <span class="decor"> from the browser</span>
+					</p>
+				</div>
+				<div id="slide3" class="slide">
+					<div class="layer slide_bottom icon_slide"></div>
+					<p class="layer slide_info slide_left">
+						Creating interactive<span class="decor"> behaviour</span>
+					</p>
+					<p class="layer slide_info scale paragraph_two">
+						through <span class="decor"> message passing</span>
+					</p>
+				</div>
+			</div>
+		</div>
+		<span class="arrow next"  id="rightControl"></span>
+	</div>	
+	<!-- adding the script to make the slider work -->
+	<script src="js/min/fullslider.min.js"></script>
+	
+	<section id="intro" class="main_container columns3">
+		<h3 class="title">Introduction</h3>
+		<p class="paragraph">
+			<h2>Final task ISS 2015</h2>
+			<br/>
+			<div>
+				<p>&nbsp;&nbsp;&nbsp;&nbsp;Design and build a (prototype of a) software system that, with reference to a differential drive robot (called from now on robot):</p>
+				<ul>
+					<li>allows a user to select between a 'learning phase' and an 'autonomous phase'</li>
+					<li>during the learning phase, the user can send a sequence of move commands (e.g. forward, backward, left right, stop) 
+					to the robot. The robot must not only execute each command but it must also <i>record</i> the whole sequence of 
+					commands until the user decides to terminate the learning phase.</li>
+					<li>after the termination of the learning phase, the user can tell the robot to enter the autonomous phase in a 
+					'direct' or in a 'reverse' mode. During this phase the robot executes in autonomous way the sequence of moves it 
+					has learned, by complementing each move (e.g. forward->backward) if the selected mode is <strong>reverse</strong>.</li>
+					<li>during the autonomous phase, the robot must be able to execute (as soon as possible) a stop command sent by the user.</li>
+				</ul>
+				<br/>
+				<p>- Non functional requirements at this step:</p>
+				<p>Remember to express in explicit way the technological hypothesis assumed during the problem analysis phase, 
+				to define the abstraction gap (if any) and to explain how the software project can overcome (in a repeatable way) such a gap.</p>
+				<br/><hr/>
+				<p>&nbsp;&nbsp;&nbsp;&nbsp;After the development of this prototype, consider the possibility to enhance the functional capabilities of the robot, 
+				by allowing it to:</p>
+				<ul>
+					<li>to perceive an obstacle during the autonomous phase and, once the obstacle is detected to execute some 
+					alternative behaviour (in term of moves).</li>
+				</ul>
+				<br/>
+				<p>- Non functional requirements at this step:</p>
+				<p>The main goal is yo discuss how some change (monotonic extensions) of the requirements impact on a product 
+				whose production is based on 'formal' and 'technology independent' artefacts rather than on ad-hoc code.</p>
+				</br>
+			</div>
+		</p>
+		</br>
+		
+		<div class="skills">
+			<h3 class="title">Skills</h3>
+			<ul>
+				<li class="skill">HTML5/CSS3/Web Design</li>
+				<li class="skill">Java/qActors/XText</li>
+				<li class="skill">PHP</li>
+			</ul>
+		</div>
+	</section>
+	<div id="contacts" class="contacts">
+		<section class="contacts_item">
+			<h3 class="title">Address:</h3>
+			<p class="paragraph">University of Bologna, Computer Science and Engineering, Cesena (FC)</p>
+			<h3 class="title">Phone:</h3>
+			<p class="paragraph">0547 338888</p>
+		</section>
+		<div id="map"></div>
+	</div>
+	<footer class="footer">
+		Created by <a href="mailto:marcocarlo.cavalazzi@studio.unibo.it" class="link">Marco Carlo Cavalazzi</a>, 
+		<a href="mailto:matteo.corradin@studio.unibo.it" class="link">Matteo Corradin</a>, 
+		<a href="mailto:lorenzo.monti@studio.unibo.it" class="link">Lorenzo Monti</a>
+	</footer>
+	
+	<!-- adding the scripts to add the map to the page -->
+	<script src='https://maps.googleapis.com/maps/api/js?key=AIzaSyDEN_8Sph4q9GwhWKKnsOP5bl4Frwyo3aM&amp;sensor=false&amp;extension=.js'></script> 
+	<script async src="js/map.js"></script>
+	
+</body>
+</html>
